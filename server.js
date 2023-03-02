@@ -7,6 +7,9 @@ require('dotenv').config();
 const cors = require('cors');
 const app = express();
 app.use(cors());
+app.use(express.json());
+
+///mongoose?
 
 const PORT = process.env.PORT || 5005
 
@@ -15,6 +18,16 @@ app.get('/', (request, response) => {
 });
 
 
+app.use(verifyUser);
+///////////////////
 
+
+app.get("*", (request, response) => {
+    response.status(404).send("Not found");
+})
+
+app.use((error, request, response, next) => {
+    response.status(500).send(error.message);
+})
 
 app.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));
