@@ -10,7 +10,9 @@ const placeSchema = new Schema({
     city: {type: String, require: true},
     state: {type: String, require: true},
     time: {type: String, require: true},
+    description: {type: String, require: true},
     RSVP: {type: Boolean, require: true},
+    email: {type: String, require: true}
 });
 
 

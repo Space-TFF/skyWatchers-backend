@@ -14,6 +14,7 @@ const verifyUser = require('./auth');
 
 
 mongoose.connect(process.env.DB_URL);
+const Place = require('./models/place.js')
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
@@ -34,7 +35,7 @@ app.use(verifyUser);
 // match func names too
 
 app.get('/ROUTE', getPlace);
-app.post('ROUTE', postPlace);
+app.post('/ROUTE', postPlace);
 app.delete('/ROUTE/:id', deletePlace);
 app.put('/ROUTE/:id', updatePlace);
 
@@ -49,6 +50,7 @@ async function getPlace(request, response) {
 }
 
 async function postPlace(request, response, next) {
+    console.log('coming in:', request.body)
     try {
         let createPlace = await Place.create(request.body);
         response.status(200).send(createPlace);
