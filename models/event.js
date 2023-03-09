@@ -8,11 +8,16 @@ const { Schema } = mongoose;
 const eventSchema = new Schema({
 	name: { type: String, require: true },
 	address: { type: String, require: true },
-	lat: { type: String, require: true },
-	lng: { type: String, require: true },
+	lat: { type: Number, require: true },
+	lng: { type: Number, require: true },
 	time: { type: String, require: true },
 	description: { type: String, require: true },
 	email: { type: String, require: true },
+	isPublic: { type: Boolean, require: true },
+	// user: {
+	// 	type: mongoose.Schema.Types.ObjectId,
+	// 	ref: 'User',
+	// },
 });
 
 const eventModel = mongoose.model('Event', eventSchema);
