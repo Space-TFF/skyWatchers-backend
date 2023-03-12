@@ -5,7 +5,7 @@ console.log('seed database with data');
 require('dotenv').config();
 const mongoose = require('mongoose');
 mongoose.connect(process.env.DB_URL);
-const Place = require('./models/place.js');
+const Place = require('./models/event.js');
 
 async function seed() {
     // name: {type: String, require: true},
