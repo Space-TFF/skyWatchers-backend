@@ -14,12 +14,10 @@ datasource db {
 model Event {
   id          Int     @id @default(autoincrement())
   name        String
+  description String
   address     String
   lat         Float
   lng         Float
-  time        String
-  description String
-  email       String
   isPublic    Boolean
 
   // Define a many-to-one relationship with User

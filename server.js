@@ -6,20 +6,14 @@ const express = require('express');
 require('dotenv').config();
 const cors = require('cors');
 const app = express();
-const mongoose = require('mongoose');
 
 app.use(cors());
 app.use(express.json());
 const verifyUser = require('./auth');
 
-mongoose.connect(process.env.DB_URL);
-const Event = require('./models/event.js');
-const User = require('./models/user');
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function () {
-	console.log('Mongoose is connected');
-});
+const { PrismaClient } = require('@prisma/client');
+
+const prisma = new PrismaClient();
 
 const PORT = process.env.PORT || 5005;
 
@@ -27,42 +21,20 @@ app.get('/', (request, response) => {
 	response.send('hello from the server.');
 });
 
-// app.use(verifyUser);
-
-//Change ROUTE to actual Route name
-// match func names too
-
 app.get('/events', getAllEvents);
 app.post('/events', postEvent);
 app.delete('/ROUTE/:id', deleteEvent);
 app.put('/ROUTE/:id', updateEvent);
 
-// app.get('/users', getUser);
-// app.post('users', createUser);
-
-// app.get('users/events/public', getPublicUserEvents); //TODO: this will mainly just be used to fetch public events they have added to their list for their profile
-// app.get('users/events/private', getPrivateUserEvents); //TODO: this will just serve as a way to fetch private events for their profile
-
-// app.post('users/events/private', createPrivateEvent); //TODO:
-
-// async function getUser(request, response, next, userEmail) {
-// 	try {
-// 		let UserResults = await User.find({ email: userEmail });
-// 		UserResults ? console.log('user found') : console.log('user not found');
-// 	} catch (error) {
-// 		console.error(error);
-// 		response.status(500).send('server error');
-// 	}
-// }
-// async function createUser(request, response, next) {}
-// async function getPublicUserEvents(request, response, next) {}
-// async function getPrivateUserEvents(request, response, next) {}
-// async function createPrivateEvent(request, response, next) {}
-
 async function getAllEvents(request, response) {
 	try {
-		let EventResults = await Event.find({ isPublic: true });
-		response.status(200).send(EventResults);
+		// Use Prisma Client to query all events
+		const events = await prisma.event.findMany();
+
+		// Log the results (or use them as needed)
+		console.log(events);
+
+		response.status(200).send(events);
 	} catch (error) {
 		console.error(error);
 		response.status(500).send('server error');
@@ -70,18 +42,19 @@ async function getAllEvents(request, response) {
 }
 
 async function getAllPrivateEvents(request, response, next) {
-    try {
-        console.log(`Request for getting all PRIVATE events: ${request}`)
+	try {
+		console.log(`Request for getting all PRIVATE events: ${request}`);
 		let userEmail = req.query.email;
 		let PrivateEventResults = await Event.find({
 			isPublic: false,
-			email: userEmail,
+			email: userEmail
 		});
 		console.log(`Private Event Results: ${PrivateEventResults}`);
 		response.status(200).send(PrivateEventResults);
 	} catch (error) {}
 }
 
+//! adjust this
 async function postEvent(request, response, next) {
 	console.log('coming in:', request.body);
 	try {
@@ -111,7 +84,7 @@ async function updateEvent(request, response, error) {
 			{ eventData, email: request.user.email },
 			{
 				new: true,
-				overwrite: true,
+				overwrite: true
 			}
 		);
 		response.status(200).send(updatedEvent);
@@ -128,4 +101,8 @@ app.use((error, request, response, next) => {
 	response.status(500).send(error.message);
 });
 
-app.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));
+app.listen(PORT, () => {
+	console.log(`Listening on PORT: ${PORT}`);
+	prisma.$connect();
+	console.log(`Prisma is connected!`);
+});
