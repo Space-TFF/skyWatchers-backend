@@ -11,28 +11,28 @@ datasource db {
 }
 
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  title     String   @db.VarChar(255)
-  content   String?
-  published Boolean  @default(false)
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
+
+// schema.prisma
+model Event {
+  id          Int      @id @default(autoincrement())
+  name        String   
+  address     String   
+  lat         Float    
+  lng         Float    
+  time        String   
+  description String   
+  email       String   
+  isPublic    Boolean  
+  
+  // Define a many-to-one relationship with User
+  // createdBy   User     @relation(fields: [email], references: [email])
 }
 
-model Profile {
-  id     Int     @id @default(autoincrement())
-  bio    String?
-  user   User    @relation(fields: [userId], references: [id])
-  userId Int     @unique
-}
+// schema.prisma
+// model User {
+//   id       Int      @id @default(autoincrement())
+//   email    String   @unique
 
-model User {
-  id      Int      @id @default(autoincrement())
-  email   String   @unique
-  name    String?
-  posts   Post[]
-  profile Profile?
-}
+//   // Define a one-to-many relationship with Event
+//   events   Event[]
+// }

@@ -14,10 +14,6 @@ const eventSchema = new Schema({
 	description: { type: String, require: true },
 	email: { type: String, require: true },
 	isPublic: { type: Boolean, require: true },
-	// user: {
-	// 	type: mongoose.Schema.Types.ObjectId,
-	// 	ref: 'User',
-	// },
 });
 
 const eventModel = mongoose.model('Event', eventSchema);
