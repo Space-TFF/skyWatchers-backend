@@ -10,20 +10,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-
 // schema.prisma
 model Event {
-  id          Int      @id @default(autoincrement())
-  name        String   
-  address     String   
-  lat         Float    
-  lng         Float    
-  time        String   
-  description String   
-  email       String   
-  isPublic    Boolean  
-  
+  id          Int     @id @default(autoincrement())
+  name        String
+  address     String
+  lat         Float
+  lng         Float
+  time        String
+  description String
+  email       String
+  isPublic    Boolean
+
   // Define a many-to-one relationship with User
   // createdBy   User     @relation(fields: [email], references: [email])
 }
