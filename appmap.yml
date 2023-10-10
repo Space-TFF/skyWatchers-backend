@@ -1,5 +1,0 @@
-name: back
-packages:
-  - path: prisma
-language: javascript
-appmap_dir: tmp/appmap
