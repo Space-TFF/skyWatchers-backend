@@ -56,10 +56,20 @@ async function getAllPrivateEvents(request, response, next) {
 
 //! adjust this
 async function postEvent(request, response, next) {
-	console.log('coming in:', request.body);
+	console.log('INCOMING POST:', request.body);
 	try {
-		let createEvent = await Event.create(request.body);
-		response.status(200).send(createEvent);
+		let data = request.body;
+		let newEvent = await prisma.event.create({
+			data: {
+				name: data.name,
+				description: data.description,
+				address: data.address,
+				lat: data.lat,
+				lng: data.lng,
+				isPublic: data.isPublic
+			}
+		})
+		response.status(200).send(newEvent);
 	} catch (error) {
 		next(error);
 	}
