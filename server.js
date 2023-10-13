@@ -68,6 +68,7 @@ async function postEvent(request, response, next) {
 				lat: data.lat,
 				lng: data.lng,
 				isPublic: data.isPublic
+				//TODO: Maybe add a "Date created" timestamp
 			}
 		})
 		response.status(200).send(newEvent);
@@ -77,9 +78,12 @@ async function postEvent(request, response, next) {
 }
 
 async function deleteEvent(request, response, next) {
+	//* request
 	let id = request.params.id;
 	try {
+		//* event to delete
 		await Event.findByIdAndDelete(id);
+		//* send the response if delete was successful
 		response.status(200).send('Event deleted');
 	} catch (error) {
 		next(error);
@@ -87,9 +91,12 @@ async function deleteEvent(request, response, next) {
 }
 
 async function updateEvent(request, response, error) {
+	//* request params
 	let id = request.params.id;
+	//* request body
 	let eventData = request.body;
 	try {
+		//* if the event exists, find it using the request params. Then update the event.
 		let updatedEvent = await Event.findByIdAndUpdate(
 			id,
 			{ eventData, email: request.user.email },
@@ -104,14 +111,19 @@ async function updateEvent(request, response, error) {
 	}
 }
 
+//* fallback route. Only hits this if an unknown endpoint is requested
 app.get('*', (request, response) => {
 	response.status(404).send('Not found');
 });
 
+
+//* if there is an error that isn't caught
 app.use((error, request, response, next) => {
 	response.status(500).send(error.message);
 });
 
+
+//* connect all services (server, db)
 app.listen(PORT, () => {
 	console.log(`Listening on PORT: ${PORT}`);
 	prisma.$connect();
