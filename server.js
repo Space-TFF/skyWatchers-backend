@@ -64,6 +64,7 @@ async function postEvent(request, response, next) {
 				name: data.name,
 				description: data.description,
 				address: data.address,
+				email: data.email,
 				lat: data.lat,
 				lng: data.lng,
 				isPublic: data.isPublic
