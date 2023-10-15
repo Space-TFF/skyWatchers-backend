@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,17 +7,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
-// schema.prisma
-
 model User {
-  id    Int    @id @default(autoincrement())
-  email String @unique
-  // Define a one-to-many relationship with Event
+  id     Int     @id @default(autoincrement())
+  email  String  @unique
   events Event[]
 }
 
-// schema.prisma
 model Event {
   id          Int     @id @default(autoincrement())
   name        String
@@ -29,9 +21,6 @@ model Event {
   lat         Float
   lng         Float
   isPublic    Boolean
-  email       String
-
-  // Define a many-to-one relationship with User
-  createdBy User? @relation(fields: [email], references: [email])
+  createdBy   User    @relation(fields: [userEmail], references: [email])
+  userEmail       String
 }
-

@@ -64,16 +64,27 @@ async function postEvent(request, response, next) {
 				name: data.name,
 				description: data.description,
 				address: data.address,
-				email: data.email,
+				// userEmail: data.email,
 				lat: data.lat,
 				lng: data.lng,
-				isPublic: data.isPublic
+				isPublic: data.isPublic,
 				//TODO: Maybe add a "Date created" timestamp
+				createdBy: {
+					connectOrCreate: {
+						where: {
+							email: data.email
+						},
+						create: {
+							email: data.email
+						}
+					}
+				}
 			}
-		})
+		});
 		response.status(200).send(newEvent);
 	} catch (error) {
 		next(error);
+		console.error(error);
 	}
 }
 
@@ -116,12 +127,10 @@ app.get('*', (request, response) => {
 	response.status(404).send('Not found');
 });
 
-
 //* if there is an error that isn't caught
 app.use((error, request, response, next) => {
 	response.status(500).send(error.message);
 });
-
 
 //* connect all services (server, db)
 app.listen(PORT, () => {
