@@ -23,8 +23,8 @@ app.get('/', (request, response) => {
 
 app.get('/events', getAllEvents);
 app.post('/events', postEvent);
-app.delete('/ROUTE/:id', deleteEvent);
-app.put('/ROUTE/:id', updateEvent);
+app.delete('/events/:id', deleteEvent);
+app.put('/events	/:id', updateEvent);
 
 async function getAllEvents(request, response) {
 	try {
@@ -90,12 +90,18 @@ async function postEvent(request, response, next) {
 
 async function deleteEvent(request, response, next) {
 	//* request
-	let id = request.params.id;
+	console.log(request.params);
+	const eventId = +request.params.id;// maybe have a separate uid for (could use use as key on front end too)
+	console.log('event id to delete: ', eventId)
 	try {
 		//* event to delete
-		await Event.findByIdAndDelete(id);
+		const deleteEvent = await prisma.event.delete({
+			where: {
+				id: eventId
+			}
+		})
 		//* send the response if delete was successful
-		response.status(200).send('Event deleted');
+		response.status(200).send(deleteEvent);
 	} catch (error) {
 		next(error);
 	}
